@@ -1,0 +1,5 @@
+api_key = "your-key"
+api_secret = "your-secret"
+environment = "production"
+timeout = 15
+max_retries = 3

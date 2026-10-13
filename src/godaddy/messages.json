@@ -1,0 +1,32 @@
+{
+  "settings.description": "Settings for the GoDaddy API client.",
+  "settings.api_key": "API key from developer.godaddy.com/keys.",
+  "settings.api_secret": "API secret that belongs to the key.",
+  "settings.environment": "Which GoDaddy environment to call: production or ote.",
+  "settings.base_url": "Full API URL. Overrides the environment when set.",
+  "settings.production_url": "API URL used for the production environment.",
+  "settings.ote_url": "API URL used for the OTE test environment.",
+  "settings.shopper_id": "Customer shopper id for reseller calls, sent as X-Shopper-Id.",
+  "settings.timeout": "Seconds to wait for a single request.",
+  "settings.max_retries": "How many times a failed request is tried again.",
+  "settings.max_retry_wait": "Longest wait in seconds the client accepts from a rate limit answer.",
+  "settings.backoff_base": "First backoff delay in seconds, doubled on every retry.",
+  "settings.backoff_cap": "Longest backoff delay in seconds.",
+  "settings.page_size": "Page size used when iterating over domains.",
+  "settings.user_agent": "User-Agent header. {version} is replaced with the package version.",
+
+  "error.request_failed": "Request failed",
+  "error.missing_credentials": "Missing credentials. Pass api_key and api_secret, set GODADDY_API_KEY and GODADDY_API_SECRET, or point GODADDY_CONFIG at a config file.",
+  "error.unknown_environment": "Unknown environment {environment!r}. Use one of: {choices}.",
+  "error.timeout": "Request timed out: {error}",
+  "error.connection": "Connection failed: {error}",
+
+  "value.empty_domain": "domain must not be empty",
+  "value.empty_name": "record name must not be empty, use '@' for the apex",
+  "value.empty_type": "record type must not be empty",
+  "value.no_values": "at least one record value is required",
+  "value.add_needs_records": "add() needs at least one DNSRecord",
+  "value.type_mismatch": "record {name!r} has type {actual}, expected {expected}",
+  "value.no_domains": "available_many() needs at least one domain",
+  "value.update_needs_fields": "update() needs at least one field to change"
+}
