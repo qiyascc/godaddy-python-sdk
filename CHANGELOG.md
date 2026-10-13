@@ -11,3 +11,4 @@ First release.
 - Typed errors, with automatic retries for rate limits and server errors
 - Configuration through goodconf: code, `GODADDY_*` environment variables or a TOML, YAML or JSON file
 - Every user facing message lives in `messages.yaml` and can be overridden at runtime
+- API version and every endpoint path come from the settings and can be overridden

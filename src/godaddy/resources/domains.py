@@ -26,6 +26,9 @@ class _DomainsBase:
     def _run(self, call: Call) -> Any:
         return self._client._execute(call)
 
+    def _path(self, endpoint: str, **params: str) -> str:
+        return self._client.settings.path(endpoint, **params)
+
     def _list_call(
         self,
         statuses: Optional[Iterable[str]],
@@ -41,7 +44,7 @@ class _DomainsBase:
             "marker": marker,
             "includes": list(includes) if includes else None,
         }
-        return Call("GET", "/v1/domains", params=params, parse=_domains)
+        return Call("GET", self._path("domains"), params=params, parse=_domains)
 
     def list(
         self,
@@ -55,7 +58,7 @@ class _DomainsBase:
         return self._run(self._list_call(statuses, status_groups, limit, marker, includes))
 
     def get(self, domain: str) -> Any:
-        return self._run(Call("GET", f"/v1/domains/{_domain(domain)}", parse=Domain.from_api))
+        return self._run(Call("GET", self._path("domain", domain=_domain(domain)), parse=Domain.from_api))
 
     def available(self, domain: str, *, full_check: bool = False, for_transfer: bool = False) -> Any:
         params = {
@@ -63,14 +66,14 @@ class _DomainsBase:
             "checkType": "FULL" if full_check else "FAST",
             "forTransfer": for_transfer,
         }
-        return self._run(Call("GET", "/v1/domains/available", params=params, parse=Availability.from_api))
+        return self._run(Call("GET", self._path("available"), params=params, parse=Availability.from_api))
 
     def available_many(self, domains: Iterable[str], *, full_check: bool = False) -> Any:
         body = [d.strip().lower() for d in domains]
         if not body:
             raise ValueError(text("value.no_domains"))
         params = {"checkType": "FULL" if full_check else "FAST"}
-        return self._run(Call("POST", "/v1/domains/available", params=params, json=body, parse=_bulk_availability))
+        return self._run(Call("POST", self._path("available"), params=params, json=body, parse=_bulk_availability))
 
     def suggest(
         self,
@@ -95,11 +98,11 @@ class _DomainsBase:
             "waitMs": wait_ms,
         }
         parse = lambda payload: [Suggestion.from_api(item) for item in payload or []]
-        return self._run(Call("GET", "/v1/domains/suggest", params=params, parse=parse))
+        return self._run(Call("GET", self._path("suggest"), params=params, parse=parse))
 
     def tlds(self) -> Any:
         parse = lambda payload: [Tld.from_api(item) for item in payload or []]
-        return self._run(Call("GET", "/v1/domains/tlds", parse=parse))
+        return self._run(Call("GET", self._path("tlds"), parse=parse))
 
     def update(
         self,
@@ -121,7 +124,7 @@ class _DomainsBase:
             body["subaccountId"] = subaccount_id
         if not body:
             raise ValueError(text("value.update_needs_fields"))
-        return self._run(Call("PATCH", f"/v1/domains/{_domain(domain)}", json=body, parse=lambda _: None))
+        return self._run(Call("PATCH", self._path("domain", domain=_domain(domain)), json=body, parse=lambda _: None))
 
 
 class Domains(_DomainsBase):

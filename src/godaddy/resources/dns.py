@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import ipaddress
 from typing import Any, Iterable, Optional, Sequence, Union
-from urllib.parse import quote
 
 from .._base import Call
 from ..messages import text
@@ -15,14 +14,14 @@ def _domain(domain: str) -> str:
     value = domain.strip().lower().rstrip(".")
     if not value:
         raise ValueError(text("value.empty_domain"))
-    return quote(value, safe="")
+    return value
 
 
 def _name(name: str) -> str:
     value = name.strip()
     if not value:
         raise ValueError(text("value.empty_name"))
-    return quote(value, safe="@")
+    return value
 
 
 def _records(payload: Any) -> list[DNSRecord]:
@@ -55,6 +54,9 @@ class DNS:
     def _run(self, call: Call) -> Any:
         return self._client._execute(call)
 
+    def _path(self, endpoint: str, **params: str) -> str:
+        return self._client.settings.path(endpoint, **params)
+
     def list(
         self,
         domain: str,
@@ -64,15 +66,17 @@ class DNS:
         offset: Optional[int] = None,
         limit: Optional[int] = None,
     ) -> Any:
-        path = f"/v1/domains/{_domain(domain)}/records"
         wanted_name = name.strip() if name else None
 
         if type is not None:
-            path += f"/{quote(record_type(type), safe='')}"
             if wanted_name:
-                path += f"/{_name(wanted_name)}"
+                path = self._path("record", domain=_domain(domain), type=record_type(type), name=_name(wanted_name))
+            else:
+                path = self._path("records_by_type", domain=_domain(domain), type=record_type(type))
             parse = _records
         else:
+            path = self._path("records", domain=_domain(domain))
+
             def parse(payload: Any) -> list[DNSRecord]:
                 records = _records(payload)
                 if wanted_name:
@@ -82,18 +86,18 @@ class DNS:
         return self._run(Call("GET", path, params={"offset": offset, "limit": limit}, parse=parse))
 
     def get(self, domain: str, type: RecordTypeLike, name: str) -> Any:
-        path = f"/v1/domains/{_domain(domain)}/records/{quote(record_type(type), safe='')}/{_name(name)}"
+        path = self._path("record", domain=_domain(domain), type=record_type(type), name=_name(name))
         return self._run(Call("GET", path, parse=_records))
 
     def exists(self, domain: str, type: RecordTypeLike, name: str) -> Any:
-        path = f"/v1/domains/{_domain(domain)}/records/{quote(record_type(type), safe='')}/{_name(name)}"
+        path = self._path("record", domain=_domain(domain), type=record_type(type), name=_name(name))
         return self._run(Call("GET", path, parse=lambda payload: bool(_records(payload))))
 
     def add(self, domain: str, *records: DNSRecord) -> Any:
         if not records:
             raise ValueError(text("value.add_needs_records"))
         body = [record.to_api() for record in records]
-        return self._run(Call("PATCH", f"/v1/domains/{_domain(domain)}/records", json=body, parse=lambda _: None))
+        return self._run(Call("PATCH", self._path("records", domain=_domain(domain)), json=body, parse=lambda _: None))
 
     def replace(
         self,
@@ -104,7 +108,7 @@ class DNS:
         *,
         ttl: int = 600,
     ) -> Any:
-        path = f"/v1/domains/{_domain(domain)}/records/{quote(record_type(type), safe='')}/{_name(name)}"
+        path = self._path("record", domain=_domain(domain), type=record_type(type), name=_name(name))
         body = _record_bodies(values, ttl)
         return self._run(Call("PUT", path, json=body, parse=lambda _: None))
 
@@ -114,15 +118,15 @@ class DNS:
             if record.type != kind:
                 raise ValueError(text("value.type_mismatch", name=record.name, actual=record.type, expected=kind))
         body = [{"name": r.name, **r.to_api(include_identity=False)} for r in records]
-        path = f"/v1/domains/{_domain(domain)}/records/{quote(kind, safe='')}"
+        path = self._path("records_by_type", domain=_domain(domain), type=kind)
         return self._run(Call("PUT", path, json=body, parse=lambda _: None))
 
     def replace_all(self, domain: str, records: Sequence[DNSRecord]) -> Any:
         body = [record.to_api() for record in records]
-        return self._run(Call("PUT", f"/v1/domains/{_domain(domain)}/records", json=body, parse=lambda _: None))
+        return self._run(Call("PUT", self._path("records", domain=_domain(domain)), json=body, parse=lambda _: None))
 
     def delete(self, domain: str, type: RecordTypeLike, name: str, *, missing_ok: bool = False) -> Any:
-        path = f"/v1/domains/{_domain(domain)}/records/{quote(record_type(type), safe='')}/{_name(name)}"
+        path = self._path("record", domain=_domain(domain), type=record_type(type), name=_name(name))
         allow = frozenset({404}) if missing_ok else frozenset()
         return self._run(Call("DELETE", path, parse=lambda _: None, allow_status=allow))
 

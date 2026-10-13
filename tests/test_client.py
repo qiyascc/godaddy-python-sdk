@@ -99,3 +99,40 @@ def test_headers_sent(gd, api):
     assert headers["authorization"] == "sso-key key:secret"
     assert headers["accept"] == "application/json"
     assert headers["user-agent"].startswith("godaddy-python-sdk/")
+
+
+def test_endpoints_from_settings(api):
+    import httpx
+
+    http = httpx.Client(transport=httpx.MockTransport(api))
+    client = GoDaddy("k", "s", http_client=http, api_version="v2")
+    api.queue(200, [])
+    client.dns.list("example.com", "A", "www")
+    assert api.last.url.path == "/v2/domains/example.com/records/A/www"
+
+
+def test_endpoint_override_from_env(monkeypatch, api):
+    import httpx
+
+    monkeypatch.setenv("GODADDY_ENDPOINTS__RECORDS", "/custom/{version}/zones/{domain}")
+    http = httpx.Client(transport=httpx.MockTransport(api))
+    client = GoDaddy("k", "s", http_client=http)
+    api.queue(200, [])
+    client.dns.list("example.com")
+    assert api.last.url.path == "/custom/v1/zones/example.com"
+
+
+def test_endpoint_override_from_file(monkeypatch, tmp_path):
+    (tmp_path / "godaddy.toml").write_text(
+        'api_key = "k"\napi_secret = "s"\n\n[endpoints]\ntlds = "/{version}/catalog/tlds"\n'
+    )
+    settings = load_settings()
+    assert settings.path("tlds") == "/v1/catalog/tlds"
+    assert settings.path("domains") == "/v1/domains"
+
+
+def test_path_values_are_quoted():
+    settings = load_settings(api_key="k", api_secret="s")
+    path = settings.path("record", domain="example.com", type="TXT", name="a b/c")
+    assert path == "/v1/domains/example.com/records/TXT/a%20b%2Fc"
+    assert settings.path("record", domain="example.com", type="A", name="@").endswith("/A/@")

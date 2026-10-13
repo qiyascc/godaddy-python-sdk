@@ -6,6 +6,8 @@ settings:
   base_url: Full API URL. Overrides the environment when set.
   production_url: API URL used for the production environment.
   ote_url: API URL used for the OTE test environment.
+  api_version: API version that fills the {version} part of every endpoint.
+  endpoints: Path templates for every API call, relative to the base URL.
   shopper_id: Customer shopper id for reseller calls, sent as X-Shopper-Id.
   timeout: Seconds to wait for a single request.
   max_retries: How many times a failed request is tried again.

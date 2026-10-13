@@ -55,6 +55,8 @@ pip install "godaddy-python-sdk[yaml] @ git+https://github.com/qiyascc/godaddy-p
 | `base_url` | `GODADDY_BASE_URL` | taken from `environment` |
 | `production_url` | `GODADDY_PRODUCTION_URL` | `https://api.godaddy.com` |
 | `ote_url` | `GODADDY_OTE_URL` | `https://api.ote-godaddy.com` |
+| `api_version` | `GODADDY_API_VERSION` | `v1` |
+| `endpoints.*` | `GODADDY_ENDPOINTS__<NAME>` | see below |
 | `shopper_id` | `GODADDY_SHOPPER_ID` | |
 | `timeout` | `GODADDY_TIMEOUT` | `30` |
 | `max_retries` | `GODADDY_MAX_RETRIES` | `3` |
@@ -71,6 +73,34 @@ from godaddy import GoDaddy, load_settings
 
 settings = load_settings("/etc/myapp/godaddy.toml", environment="ote")
 gd = GoDaddy(settings=settings)
+```
+
+### Endpoints
+
+API paths are part of the settings too, so nothing is pinned in the code. Each one is a template relative to the base URL. `{version}` comes from `api_version`, and the other placeholders are filled in and URL encoded for each call.
+
+| Name | Default |
+| --- | --- |
+| `domains` | `/{version}/domains` |
+| `domain` | `/{version}/domains/{domain}` |
+| `available` | `/{version}/domains/available` |
+| `suggest` | `/{version}/domains/suggest` |
+| `tlds` | `/{version}/domains/tlds` |
+| `records` | `/{version}/domains/{domain}/records` |
+| `records_by_type` | `/{version}/domains/{domain}/records/{type}` |
+| `record` | `/{version}/domains/{domain}/records/{type}/{name}` |
+
+You can override one of them in a config file:
+
+```toml
+[endpoints]
+records = "/{version}/domains/{domain}/records"
+```
+
+or through the environment, with a double underscore between the parts:
+
+```bash
+export GODADDY_ENDPOINTS__TLDS="/{version}/domains/tlds"
 ```
 
 GoDaddy gives you two environments. `production` is the default. `ote` is their test sandbox, and it needs its own keys.
