@@ -1,20 +1,39 @@
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping
 from importlib import resources
 from pathlib import Path
 from typing import Any, Union
 
+import yaml
+
 PathLike = Union[str, Path]
 
-_PACKAGE_FILE = "messages.json"
+_PACKAGE_FILE = "messages.yaml"
 _catalog: dict[str, str] = {}
+
+
+def _flatten(node: Mapping[str, Any], prefix: str = "") -> dict[str, str]:
+    flat: dict[str, str] = {}
+    for key, value in node.items():
+        path = f"{prefix}{key}"
+        if isinstance(value, Mapping):
+            flat.update(_flatten(value, f"{path}."))
+        else:
+            flat[path] = str(value)
+    return flat
+
+
+def _parse(raw: str) -> dict[str, str]:
+    data = yaml.safe_load(raw) or {}
+    if not isinstance(data, Mapping):
+        raise ValueError("messages file must contain a mapping")
+    return _flatten(data)
 
 
 def _read_packaged() -> dict[str, str]:
     raw = resources.files(__package__).joinpath(_PACKAGE_FILE).read_text(encoding="utf-8")
-    return dict(json.loads(raw))
+    return _parse(raw)
 
 
 def catalog() -> Mapping[str, str]:
@@ -23,11 +42,11 @@ def catalog() -> Mapping[str, str]:
     return _catalog
 
 
-def use(source: PathLike | Mapping[str, str]) -> None:
+def use(source: PathLike | Mapping[str, Any]) -> None:
     if isinstance(source, Mapping):
-        overrides = dict(source)
+        overrides = _flatten(source)
     else:
-        overrides = dict(json.loads(Path(source).read_text(encoding="utf-8")))
+        overrides = _parse(Path(source).read_text(encoding="utf-8"))
     unknown = set(overrides) - set(_read_packaged())
     if unknown:
         raise KeyError(", ".join(sorted(unknown)))

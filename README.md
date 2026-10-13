@@ -17,7 +17,7 @@ That call makes `shop.example.com` resolve to `203.0.113.10`.
 pip install git+https://github.com/qiyascc/godaddy-python-sdk.git
 ```
 
-Requires Python 3.10 or newer. Dependencies: [httpx](https://www.python-httpx.org/), [goodconf](https://github.com/lincolnloop/goodconf) and pydantic.
+Requires Python 3.10 or newer. Dependencies: [httpx](https://www.python-httpx.org/), [goodconf](https://github.com/lincolnloop/goodconf), pydantic and PyYAML.
 
 ## Configuration
 
@@ -225,12 +225,19 @@ Reseller accounts can act for a customer by passing `shopper_id=`.
 
 ## Messages
 
-Every error and validation message the SDK produces is stored in `godaddy/messages.json`, so none of them are hardcoded. You can replace some or all of them, for example to translate them:
+Every error and validation message the SDK produces is stored in `godaddy/messages.yaml`, so none of them are hardcoded. You can replace some or all of them, for example to translate them:
+
+```yaml
+value:
+  empty_name: Record adı boş ola bilməz
+error:
+  timeout: "Sorğu vaxtı bitdi: {error}"
+```
 
 ```python
 from godaddy import messages
 
-messages.use("messages.az.json")
+messages.use("messages.az.yaml")
 messages.use({"value.empty_name": "Record adı boş ola bilməz"})
 ```
 

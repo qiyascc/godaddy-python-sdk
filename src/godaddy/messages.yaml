@@ -1,0 +1,32 @@
+settings:
+  description: Settings for the GoDaddy API client.
+  api_key: API key from developer.godaddy.com/keys.
+  api_secret: API secret that belongs to the key.
+  environment: 'Which GoDaddy environment to call: production or ote.'
+  base_url: Full API URL. Overrides the environment when set.
+  production_url: API URL used for the production environment.
+  ote_url: API URL used for the OTE test environment.
+  shopper_id: Customer shopper id for reseller calls, sent as X-Shopper-Id.
+  timeout: Seconds to wait for a single request.
+  max_retries: How many times a failed request is tried again.
+  max_retry_wait: Longest wait in seconds the client accepts from a rate limit answer.
+  backoff_base: First backoff delay in seconds, doubled on every retry.
+  backoff_cap: Longest backoff delay in seconds.
+  page_size: Page size used when iterating over domains.
+  user_agent: User-Agent header. {version} is replaced with the package version.
+error:
+  request_failed: Request failed
+  missing_credentials: Missing credentials. Pass api_key and api_secret, set GODADDY_API_KEY and GODADDY_API_SECRET,
+    or point GODADDY_CONFIG at a config file.
+  unknown_environment: 'Unknown environment {environment!r}. Use one of: {choices}.'
+  timeout: 'Request timed out: {error}'
+  connection: 'Connection failed: {error}'
+value:
+  empty_domain: domain must not be empty
+  empty_name: record name must not be empty, use '@' for the apex
+  empty_type: record type must not be empty
+  no_values: at least one record value is required
+  add_needs_records: add() needs at least one DNSRecord
+  type_mismatch: record {name!r} has type {actual}, expected {expected}
+  no_domains: available_many() needs at least one domain
+  update_needs_fields: update() needs at least one field to change
