@@ -2,6 +2,7 @@ settings:
   description: Settings for the GoDaddy API client.
   api_key: API key from developer.godaddy.com/keys.
   api_secret: API secret that belongs to the key.
+  api_token: Personal access token (gd_pat_…). Used instead of the key and secret.
   environment: 'Which GoDaddy environment to call: production or ote.'
   base_url: Full API URL. Overrides the environment when set.
   production_url: API URL used for the production environment.
@@ -18,8 +19,8 @@ settings:
   user_agent: User-Agent header. {version} is replaced with the package version.
 error:
   request_failed: Request failed
-  missing_credentials: Missing credentials. Pass api_key and api_secret, set GODADDY_API_KEY and GODADDY_API_SECRET,
-    or point GODADDY_CONFIG at a config file.
+  missing_credentials: Missing credentials. Pass api_key and api_secret (or api_token), set GODADDY_API_KEY and
+    GODADDY_API_SECRET (or GODADDY_API_TOKEN), or point GODADDY_CONFIG at a config file.
   unknown_environment: 'Unknown environment {environment!r}. Use one of: {choices}.'
   timeout: 'Request timed out: {error}'
   connection: 'Connection failed: {error}'

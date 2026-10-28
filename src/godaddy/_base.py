@@ -77,7 +77,7 @@ class BaseClient:
             settings = load_settings(None, **{**settings.model_dump(), **changes})
 
         self.settings = settings
-        self._api_key, self._api_secret = settings.require_credentials()
+        self._authorization = settings.authorization()
         self.base_url = settings.resolved_base_url()
         self.environment = settings.environment.lower()
         self.shopper_id = settings.shopper_id
@@ -91,7 +91,7 @@ class BaseClient:
 
     def _default_headers(self) -> dict[str, str]:
         headers = {
-            "Authorization": f"sso-key {self._api_key}:{self._api_secret}",
+            "Authorization": self._authorization,
             "Accept": "application/json",
             "User-Agent": self.user_agent,
         }

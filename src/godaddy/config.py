@@ -33,6 +33,7 @@ class Settings(GoodConf):
 
     api_key: SecretStr = Field(default=SecretStr(""), description=text("settings.api_key"))
     api_secret: SecretStr = Field(default=SecretStr(""), description=text("settings.api_secret"))
+    api_token: SecretStr = Field(default=SecretStr(""), description=text("settings.api_token"))
     environment: str = Field(default="production", description=text("settings.environment"))
     base_url: Optional[str] = Field(default=None, description=text("settings.base_url"))
     production_url: str = Field(default="https://api.godaddy.com", description=text("settings.production_url"))
@@ -80,6 +81,18 @@ class Settings(GoodConf):
         if not key or not secret:
             raise AuthenticationError(text("error.missing_credentials"))
         return key, secret
+
+    def authorization(self) -> str:
+        """Value of the Authorization header: a personal access token is sent as Bearer, a key pair as sso-key.
+        A gd_pat_… token passed as api_key (with no secret) counts as a token."""
+        token = self.api_token.get_secret_value()
+        key = self.api_key.get_secret_value()
+        if not token and key.startswith("gd_pat_") and not self.api_secret.get_secret_value():
+            token = key
+        if token:
+            return f"Bearer {token}"
+        key, secret = self.require_credentials()
+        return f"sso-key {key}:{secret}"
 
 
 Settings.__doc__ = text("settings.description")
