@@ -136,3 +136,11 @@ def test_path_values_are_quoted():
     path = settings.path("record", domain="example.com", type="TXT", name="a b/c")
     assert path == "/v1/domains/example.com/records/TXT/a%20b%2Fc"
     assert settings.path("record", domain="example.com", type="A", name="@").endswith("/A/@")
+
+
+def test_personal_access_token_is_sent_as_bearer():
+    from godaddy import GoDaddy
+
+    assert GoDaddy(api_token="gd_pat_abc")._default_headers()["Authorization"] == "Bearer gd_pat_abc"
+    assert GoDaddy("gd_pat_xyz")._default_headers()["Authorization"] == "Bearer gd_pat_xyz"
+    assert GoDaddy("k", "s")._default_headers()["Authorization"] == "sso-key k:s"

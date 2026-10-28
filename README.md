@@ -29,6 +29,12 @@ Create a key pair at [developer.godaddy.com/keys](https://developer.godaddy.com/
 gd = GoDaddy("API_KEY", "API_SECRET")
 ```
 
+A personal access token (`gd_pat_…`) works too. It is sent as `Authorization: Bearer …`:
+
+```python
+gd = GoDaddy(api_token="gd_pat_...")   # or GoDaddy("gd_pat_..."), or GODADDY_API_TOKEN
+```
+
 ```bash
 export GODADDY_API_KEY=...
 export GODADDY_API_SECRET=...
@@ -51,6 +57,7 @@ pip install "godaddy-python-sdk[yaml] @ git+https://github.com/qiyascc/godaddy-p
 | --- | --- | --- |
 | `api_key` | `GODADDY_API_KEY` | |
 | `api_secret` | `GODADDY_API_SECRET` | |
+| `api_token` | `GODADDY_API_TOKEN` | |
 | `environment` | `GODADDY_ENVIRONMENT` | `production` |
 | `base_url` | `GODADDY_BASE_URL` | taken from `environment` |
 | `production_url` | `GODADDY_PRODUCTION_URL` | `https://api.godaddy.com` |
