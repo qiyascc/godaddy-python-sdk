@@ -1,5 +1,7 @@
 # godaddy-python-sdk
 
+[![PyPI](https://img.shields.io/pypi/v/godaddy-python-sdk?color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/godaddy-python-sdk/)
+
 A small, typed Python client for the GoDaddy Domains and DNS API. It works with both sync and async code, retries when GoDaddy rate limits you, and returns plain dataclasses, not raw JSON.
 
 ```python
