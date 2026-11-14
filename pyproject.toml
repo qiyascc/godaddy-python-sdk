@@ -32,6 +32,7 @@ yaml = ["goodconf[yaml]>=7.1"]
 dev = ["godaddy-python-sdk[toml,yaml]", "pytest>=7", "pytest-asyncio>=0.21", "ruff>=0.4", "mypy>=1.8", "types-PyYAML"]
 
 [project.urls]
+Documentation = "https://godaddy-python-sdk.readthedocs.io/"
 Homepage = "https://theqiyas.cc/projects/godaddy-python-sdk/"
 Source = "https://github.com/qiyascc/godaddy-python-sdk"
 Author = "https://theqiyas.cc"
