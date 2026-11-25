@@ -100,7 +100,7 @@ The quotes stop shells like zsh from treating the square brackets as a pattern.
 python -c "import godaddy; print(godaddy.__version__)"
 ```
 
-It prints the installed version, for example `0.1.0`. A `ModuleNotFoundError` usually means the virtual environment is not active, or the package went into a different Python than the one you are running.
+It prints the installed version, for example `0.1.1`. A `ModuleNotFoundError` usually means the virtual environment is not active, or the package went into a different Python than the one you are running.
 
 You can also check that the client can be built without touching the network. Building a client only reads the settings, it does not send a request:
 
