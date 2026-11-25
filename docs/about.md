@@ -1,13 +1,13 @@
 # About
 
-The GoDaddy Python SDK is written and maintained by **Qiyas Sadıqov**. More projects by the same author, including the other SDKs and Django packages, are on [theqiyas.cc](https://theqiyas.cc).
+The GoDaddy Python SDK is written and maintained by **Qiyas Sadıqov**. More projects by the same author, including the other SDKs and Django packages, are on [qiyas.cc](https://qiyas.cc).
 
 ## Links
 
 - Documentation: [godaddy-python-sdk.readthedocs.io](https://godaddy-python-sdk.readthedocs.io/en/latest/)
 - Source code: [github.com/qiyascc/godaddy-python-sdk](https://github.com/qiyascc/godaddy-python-sdk)
 - PyPI: [pypi.org/project/godaddy-python-sdk](https://pypi.org/project/godaddy-python-sdk/)
-- Project page: [theqiyas.cc/projects/godaddy-python-sdk](https://theqiyas.cc/projects/godaddy-python-sdk/)
+- Project page: [qiyas.cc/projects/godaddy-python-sdk](https://qiyas.cc/projects/godaddy-python-sdk/)
 - Issues: [github.com/qiyascc/godaddy-python-sdk/issues](https://github.com/qiyascc/godaddy-python-sdk/issues)
 
 ## The DNS SDK family

@@ -300,8 +300,8 @@ The tests use `httpx.MockTransport`, so they never touch the real API.
 - Documentation: [godaddy-python-sdk.readthedocs.io](https://godaddy-python-sdk.readthedocs.io/en/latest/)
 - Source code: [github.com/qiyascc/godaddy-python-sdk](https://github.com/qiyascc/godaddy-python-sdk)
 - PyPI: [pypi.org/project/godaddy-python-sdk](https://pypi.org/project/godaddy-python-sdk/)
-- Project page: [theqiyas.cc/projects/godaddy-python-sdk](https://theqiyas.cc/projects/godaddy-python-sdk/)
-- Author: [Qiyas Sadıqov](https://theqiyas.cc), more projects at [theqiyas.cc](https://theqiyas.cc)
+- Project page: [qiyas.cc/projects/godaddy-python-sdk](https://qiyas.cc/projects/godaddy-python-sdk/)
+- Author: [Qiyas Sadıqov](https://qiyas.cc), more projects at [qiyas.cc](https://qiyas.cc)
 
 ## License
 

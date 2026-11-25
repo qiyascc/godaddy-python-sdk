@@ -33,9 +33,9 @@ dev = ["godaddy-python-sdk[toml,yaml]", "pytest>=7", "pytest-asyncio>=0.21", "ru
 
 [project.urls]
 Documentation = "https://godaddy-python-sdk.readthedocs.io/"
-Homepage = "https://theqiyas.cc/projects/godaddy-python-sdk/"
+Homepage = "https://qiyas.cc/projects/godaddy-python-sdk/"
 Source = "https://github.com/qiyascc/godaddy-python-sdk"
-Author = "https://theqiyas.cc"
+Author = "https://qiyas.cc"
 Issues = "https://github.com/qiyascc/godaddy-python-sdk/issues"
 Changelog = "https://github.com/qiyascc/godaddy-python-sdk/blob/main/CHANGELOG.md"
 
